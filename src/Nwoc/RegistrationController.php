@@ -57,7 +57,7 @@ class RegistrationController {
 				$this->register_student($student, $cookie);
 				setcookie('session', $cookie, time() + 60*60*24*365*10);
 				// @TODO change domain
-				header('Location: http://localhost:8080/index.php', true, 303);
+				header('Location: http://localhost/index.php', true, 303);
 				return;
 			} catch (ValidationException $e) {
 				$env['entered_form'] = $student;
