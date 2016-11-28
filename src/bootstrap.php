@@ -21,7 +21,7 @@ class Bootstrap {
 
         return $db;
     }
-
+ 
     function get_session() {
         return new Nwoc\Session;
     }

@@ -4,6 +4,6 @@ root = true
 end_of_line = lf
 insert_final_newline = true
 
-[{src/**.php,db.sql,composer.json,composer.lock}]
+[*.{php, css, html, json, sql, ini}]
 indent_style = space
 indent_size = 4

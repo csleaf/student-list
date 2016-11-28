@@ -5,13 +5,13 @@ CREATE DATABASE students
 use students;
  
 CREATE TABLE students (
-	forename VARCHAR(64) NOT NULL,
-	surname VARCHAR(64) NOT NULL,
-	email VARCHAR(64) NOT NULL UNIQUE,
-	gender BOOL NOT NULL,
-	group_id CHAR(5) NOT NULL,
-	exam_results SMALLINT NOT NULL,
-	birth_year SMALLINT NOT NULL,
-	is_foreign SMALLINT NOT NULL,
-	cookie CHAR(32) NOT NULL
+    forename VARCHAR(64) NOT NULL,
+    surname VARCHAR(64) NOT NULL,
+    email VARCHAR(64) NOT NULL UNIQUE,
+    gender BOOL NOT NULL,
+    group_id CHAR(5) NOT NULL,
+    exam_results SMALLINT NOT NULL,
+    birth_year SMALLINT NOT NULL,
+    is_foreign SMALLINT NOT NULL,
+    cookie CHAR(32) NOT NULL
 ) ENGINE MyISAM;

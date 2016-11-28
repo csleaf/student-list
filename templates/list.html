@@ -4,17 +4,17 @@
 {% set props = {"forename": "Имя", "surname": "Фамилия", "group_id": "Номер группы", "exam_results": "Баллов"} %}
 
 {% macro render_sort_display(sort, order, field) %}
-	{% if sort == field and order == "asc" %}
-		{% set uri_sort = { "sort": field, "order": "desc" } %}
-	{% else %}
-		{% set uri_sort = { "sort": field, "order": NULL } %}
-	{% endif %}
-	<a href='{{ urigen("index.php", uri_sort, ["sort", "order", "query", "page"]) }}' class='sort-display'>
-	{% if sort == field %}
-		{% if order == "asc" %}↑{% else %}↓{% endif %}
-	{% else %}
-		↕
-	{% endif %}</a>
+    {% if sort == field and order == "asc" %}
+        {% set uri_sort = { "sort": field, "order": "desc" } %}
+    {% else %}
+        {% set uri_sort = { "sort": field, "order": NULL } %}
+    {% endif %}
+    <a href='{{ urigen("index.php", uri_sort, ["sort", "order", "query", "page"]) }}' class='sort-display'>
+    {% if sort == field %}
+        {% if order == "asc" %}↑{% else %}↓{% endif %}
+    {% else %}
+        ↕
+    {% endif %}</a>
 {% endmacro %}
 
 {% macro put_get_params_as_hidden_inputs(get, retain) %}
@@ -27,32 +27,32 @@
 
 {% block content %}
 <div class='student-search'>
-	<span>Поиск: </span>
-	<form class='inline-form' action='/index.php' type='GET'>
-		<input name='query' type='text' class='placeholder-input' placeholder='Введите запрос...' {% if search_query %}value='{{ search_query }}'{% endif %} />
-		<!-- @TODO: XSRF -->
+    <span>Поиск: </span>
+    <form class='inline-form' action='/index.php' type='GET'>
+        <input name='query' type='text' class='placeholder-input' placeholder='Введите запрос...' {% if search_query %}value='{{ search_query }}'{% endif %} />
+        <!-- @TODO: XSRF -->
         {{ me.put_get_params_as_hidden_inputs(get_params, ['sort', 'order']) }}
-		<input type='submit' value='Найти' />
-	</form>
+        <input type='submit' value='Найти' />
+    </form>
 </div>
 
 {% if search_query %}
-	<p>Показаны только абитуриенты, найденные по запросу «{{ search_query }}».</p>
-	<p>[<a href='/index.php'>Показать всех абитуриентов</a>]</p>
+    <p>Показаны только абитуриенты, найденные по запросу «{{ search_query }}».</p>
+    <p>[<a href='/index.php'>Показать всех абитуриентов</a>]</p>
 {% endif %}
 
 <table class='student-table'>
-	<tr>
-		{% for prop, name in props %}
-			<th>{{ name }} {{ me.render_sort_display(sort_by, order, prop) }}</th>
-		{% endfor %}
-	</tr>
-	{% for student in students %}
-	<tr>
-		{% for prop, name in props %}
-			<td {% if sort_by == prop %}class='column-highlight'{% endif %}>{{ attribute(student, prop) }}</td>
-		{% endfor %}
-	</tr>
-	{% endfor %}
+    <tr>
+        {% for prop, name in props %}
+            <th>{{ name }} {{ me.render_sort_display(sort_by, order, prop) }}</th>
+        {% endfor %}
+    </tr>
+    {% for student in students %}
+    <tr>
+        {% for prop, name in props %}
+            <td {% if sort_by == prop %}class='column-highlight'{% endif %}>{{ attribute(student, prop) }}</td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
 </table>
 {% endblock %}

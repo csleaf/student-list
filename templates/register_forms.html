@@ -1,23 +1,23 @@
 
 {% macro show_field_errors(errorTable, fieldName) %}
-	{% if errorTable[fieldName] %}
-		<div class="error" />
-		{% for error in errorTable[fieldName] %}
-			<li>{{ error }}</li>
-		{% endfor %}
-		</div>
-	{% endif %}
+    {% if errorTable[fieldName] %}
+        <div class="error" />
+        {% for error in errorTable[fieldName] %}
+            <li>{{ error }}</li>
+        {% endfor %}
+        </div>
+    {% endif %}
 {% endmacro %}
 
 {% macro render_field(label, fieldName, enteredForm, errorTable, type, ext) %}
-	{% import _self as bla %}
+    {% import _self as bla %}
 
-	<label for="{{ fieldName }}">{{ label }}</label>
-	{% if attribute(enteredForm, fieldName) != null %}
-		<input type="{{ type }}" name="{{ fieldName }}" value="{{ attribute(enteredForm, fieldName) }}" {{ ext|raw }}>
-	{% else %}
-		<input type="{{ type }}" name="{{ fieldName }}" {{ ext|raw }}>
-	{% endif %}
+    <label for="{{ fieldName }}">{{ label }}</label>
+    {% if attribute(enteredForm, fieldName) != null %}
+        <input type="{{ type }}" name="{{ fieldName }}" value="{{ attribute(enteredForm, fieldName) }}" {{ ext|raw }}>
+    {% else %}
+        <input type="{{ type }}" name="{{ fieldName }}" {{ ext|raw }}>
+    {% endif %}
 
-	{{ bla.show_field_errors(errorTable, fieldName) }}
+    {{ bla.show_field_errors(errorTable, fieldName) }}
 {% endmacro %}

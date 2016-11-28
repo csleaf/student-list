@@ -2,187 +2,187 @@
 namespace Nwoc;
 
 class StudentsTableGateway {
-	const NAME_REGEXP = "/^[А-Яа-я' ]+$/u";
-	const GROUP_REGEXP = "/^[А-Яа-я0-9]+$/u";
-	const ORDER_ASC = 0;
-	const ORDER_DESC = 1;
+    const NAME_REGEXP = "/^[А-Яа-я' ]+$/u";
+    const GROUP_REGEXP = "/^[А-Яа-я0-9]+$/u";
+    const ORDER_ASC = 0;
+    const ORDER_DESC = 1;
 
-	private $db;
+    private $db;
 
-	public function __construct(\PDO $pdo) {
-		$this->db = $pdo;
-	}
+    public function __construct(\PDO $pdo) {
+        $this->db = $pdo;
+    }
 
-	public function validate_student(Student $student) {
-		$errors = array();
+    public function validate_student(Student $student) {
+        $errors = array();
 
-		// forename
-		$validator = new ObjectValidator('UTF-8');
-		$validator->min_length(1, 'Вы не задали своё имя.')
-			      ->max_length(64, 'Имя не должно быть длиннее :inparam букв (вы ввели :outparam букв).')
-			      ->regexp_match(self::NAME_REGEXP, 'Имя может включать в себя только буквы от А до Я, пробел, дефис и апостроф.')
-				  ->validate($student->forename, $errors, 'forename');
+        // forename
+        $validator = new ObjectValidator('UTF-8');
+        $validator->min_length(1, 'Вы не задали своё имя.')
+                  ->max_length(64, 'Имя не должно быть длиннее :inparam букв (вы ввели :outparam букв).')
+                  ->regexp_match(self::NAME_REGEXP, 'Имя может включать в себя только буквы от А до Я, пробел, дефис и апостроф.')
+                  ->validate($student->forename, $errors, 'forename');
 
-		// surname
-		$validator->clear();
-		$validator->min_length(1, 'Вы не задали свою фамилию.')
-				  ->max_length(64, 'Фамилия не должна быть длиннее :inparam букв, вы ввели :outparam букв.')
-				  ->regexp_match(self::NAME_REGEXP, 'Фамилия может включать в себя только буквы от А до Я, пробел, дефис и апостроф.')
-				  ->validate($student->surname, $errors, 'surname');
+        // surname
+        $validator->clear();
+        $validator->min_length(1, 'Вы не задали свою фамилию.')
+                  ->max_length(64, 'Фамилия не должна быть длиннее :inparam букв, вы ввели :outparam букв.')
+                  ->regexp_match(self::NAME_REGEXP, 'Фамилия может включать в себя только буквы от А до Я, пробел, дефис и апостроф.')
+                  ->validate($student->surname, $errors, 'surname');
 
-		// email
-		// @TODO: regexp match
-		$validator->clear();
-		$validator->min_length(1, 'Вы не задали свой e-mail.')
-				  ->max_length(64, 'Вы ввели слишком длинный e-mail, максимальное кол-во символов: :inparam, вы ввели: :outparam символов.');
-		if ($validator->validate($student->email, $errors, 'email') == 0) {
-			// @TODO optimize
-			$query = $this->db->prepare('SELECT COUNT(email) FROM students WHERE email=?');
-			$query->execute(array(strval($student->email)));
-			$result = $query->fetch(\PDO::FETCH_NUM);
-			if (intval($result[0]) != 0) {
-				$errors['email'] = array('Студент с таким E-mail уже зарегистрирован.');
-			}
-			$query->closeCursor();
-		}
+        // email
+        // @TODO: regexp match
+        $validator->clear();
+        $validator->min_length(1, 'Вы не задали свой e-mail.')
+                  ->max_length(64, 'Вы ввели слишком длинный e-mail, максимальное кол-во символов: :inparam, вы ввели: :outparam символов.');
+        if ($validator->validate($student->email, $errors, 'email') == 0) {
+            // @TODO optimize
+            $query = $this->db->prepare('SELECT COUNT(email) FROM students WHERE email=?');
+            $query->execute(array(strval($student->email)));
+            $result = $query->fetch(\PDO::FETCH_NUM);
+            if (intval($result[0]) != 0) {
+                $errors['email'] = array('Студент с таким E-mail уже зарегистрирован.');
+            }
+            $query->closeCursor();
+        }
 
-		// gender
-		if (!($student->gender == Student::GENDER_MALE || $student->gender == Student::GENDER_FEMALE))
-		{
-			$errors['gender'] = array('Вы не выбрали свой пол.');
-		}
+        // gender
+        if (!($student->gender == Student::GENDER_MALE || $student->gender == Student::GENDER_FEMALE))
+        {
+            $errors['gender'] = array('Вы не выбрали свой пол.');
+        }
 
-		// group id
-		if (!isset($student->group_id)) {
-			$errors['group_id'] = array('Вы не указали название своей группы.');
-		} else {
-			$validator->clear();
-			$validator->min_length(2, 'Название группы состоит как минимум из :inparam символов, вы ввели :outparam символов')
-					  ->max_length(5, 'Название группы слишком длинное: оно должно быть не более :inparam символов, вы ввели :outparam символов.')
-					  ->regexp_match(self::GROUP_REGEXP, 'Название группы должно быть от 2-х до 5-ти символов и может включать лишь буквы от А до Я и цифры.')
-					  ->validate($student->group_id, $errors, 'group_id');
-		}
+        // group id
+        if (!isset($student->group_id)) {
+            $errors['group_id'] = array('Вы не указали название своей группы.');
+        } else {
+            $validator->clear();
+            $validator->min_length(2, 'Название группы состоит как минимум из :inparam символов, вы ввели :outparam символов')
+                      ->max_length(5, 'Название группы слишком длинное: оно должно быть не более :inparam символов, вы ввели :outparam символов.')
+                      ->regexp_match(self::GROUP_REGEXP, 'Название группы должно быть от 2-х до 5-ти символов и может включать лишь буквы от А до Я и цифры.')
+                      ->validate($student->group_id, $errors, 'group_id');
+        }
 
-		// exam_results
-		if (!isset($student->exam_results)) {
-			$errors['exam_results'] = array('Вы не ввели свои баллы по ЕГЭ.');
-		} elseif (!ctype_digit(intval($student->exam_results))
-			  && (intval($student->exam_results) <= 0 || intval($student->exam_results) > 315))
-		{
-			$errors['exam_results'] = array('Введите свои баллы по ЕГЭ от 0 до 315.');
-		}
+        // exam_results
+        if (!isset($student->exam_results)) {
+            $errors['exam_results'] = array('Вы не ввели свои баллы по ЕГЭ.');
+        } elseif (!ctype_digit(intval($student->exam_results))
+              && (intval($student->exam_results) <= 0 || intval($student->exam_results) > 315))
+        {
+            $errors['exam_results'] = array('Введите свои баллы по ЕГЭ от 0 до 315.');
+        }
 
-		// birth_year
-		if (!isset($student->birth_year)) {
-			$errors['birth_year'] = array('Вы не указали ваш год рождения.');
-		} elseif (!ctype_digit($student->birth_year)) {
-			$errors['birth_year'] = array('Год рождения должен состоять только из цифр.');
-		} elseif (intval($student->birth_year) < 1900 ||
-				  intval($student->birth_year) > 2015)
-		{
-			$errors['birth_year'] = array('Год рождения должен быть указан в диапазоне от 1900 до 2015 года.');
-		}
+        // birth_year
+        if (!isset($student->birth_year)) {
+            $errors['birth_year'] = array('Вы не указали ваш год рождения.');
+        } elseif (!ctype_digit($student->birth_year)) {
+            $errors['birth_year'] = array('Год рождения должен состоять только из цифр.');
+        } elseif (intval($student->birth_year) < 1900 ||
+                  intval($student->birth_year) > 2015)
+        {
+            $errors['birth_year'] = array('Год рождения должен быть указан в диапазоне от 1900 до 2015 года.');
+        }
 
-		// is_foreign
-		if (!isset($student->is_foreign)
-		  && !(intval($student->is_foreign) == 0 /* false */
-		  ||   intval($student->is_foreign) == 1 /* true  */))
-		{
-			$errors['is_foreign'] = array('Вы не указали свой статус.');
-		}
+        // is_foreign
+        if (!isset($student->is_foreign)
+          && !(intval($student->is_foreign) == 0 /* false */
+          ||   intval($student->is_foreign) == 1 /* true  */))
+        {
+            $errors['is_foreign'] = array('Вы не указали свой статус.');
+        }
 
-		if (count($errors) !== 0) {
-			throw new ValidationException($student, $errors);
-		}
-	}
+        if (count($errors) !== 0) {
+            throw new ValidationException($student, $errors);
+        }
+    }
 
-	public function register_student(Student $student, string &$cookie) {
-		$this->validate_student($student);
-		$cookie = SecurityUtil::generate_session_id();
+    public function register_student(Student $student, string &$cookie) {
+        $this->validate_student($student);
+        $cookie = SecurityUtil::generate_session_id();
 
-		$stmt = $this->db->prepare('INSERT INTO students(forename, surname, email, group_id, exam_results, birth_year, is_foreign, gender, cookie) VALUES (?,?,?,?,?,?,?,?,?)');
-		return $stmt->execute(array(strval($student->forename),
-									strval($student->surname),
-									strval($student->email),
-									strval($student->group_id),
-									intval($student->exam_results),
-									intval($student->birth_year),
-									intval($student->is_foreign),
-									intval($student->gender),
-									$cookie));
-	}
+        $stmt = $this->db->prepare('INSERT INTO students(forename, surname, email, group_id, exam_results, birth_year, is_foreign, gender, cookie) VALUES (?,?,?,?,?,?,?,?,?)');
+        return $stmt->execute(array(strval($student->forename),
+                                    strval($student->surname),
+                                    strval($student->email),
+                                    strval($student->group_id),
+                                    intval($student->exam_results),
+                                    intval($student->birth_year),
+                                    intval($student->is_foreign),
+                                    intval($student->gender),
+                                    $cookie));
+    }
 
-	private static function create_student_from_row(array $row): Student {
-		$student = new Student;
-		$student->forename =     strval($row[0]);
-		$student->surname =      strval($row[1]);
-		$student->email =        strval($row[2]);
-		$student->gender =       intval($row[3]);
-		$student->group_id =     strval($row[4]);
-		$student->exam_results = intval($row[5]);
-		$student->birth_year =   intval($row[6]);
-		$student->is_foreign =   intval($row[7]);
-		return $student;
-	}
+    private static function create_student_from_row(array $row): Student {
+        $student = new Student;
+        $student->forename =     strval($row[0]);
+        $student->surname =      strval($row[1]);
+        $student->email =        strval($row[2]);
+        $student->gender =       intval($row[3]);
+        $student->group_id =     strval($row[4]);
+        $student->exam_results = intval($row[5]);
+        $student->birth_year =   intval($row[6]);
+        $student->is_foreign =   intval($row[7]);
+        return $student;
+    }
 
-	public function get_student_with_cookie(string $cookie) {
-		$query = $this->db->prepare('SELECT * FROM students WHERE cookie=?');
-		$query->execute(array($cookie));
-		if (($row = $query->fetch(\PDO::FETCH_NUM))) {
-			$query->closeCursor();
-			return StudentsTableGateway::create_student_from_row($row);
-		} else {
-			$query->closeCursor();
-			return null; // @TODO or throw exception
-		}
-	}
+    public function get_student_with_cookie(string $cookie) {
+        $query = $this->db->prepare('SELECT * FROM students WHERE cookie=?');
+        $query->execute(array($cookie));
+        if (($row = $query->fetch(\PDO::FETCH_NUM))) {
+            $query->closeCursor();
+            return StudentsTableGateway::create_student_from_row($row);
+        } else {
+            $query->closeCursor();
+            return null; // @TODO or throw exception
+        }
+    }
 
-	public function get_all_students(string $order_field = 'forename', int $order_dir = self::ORDER_ASC, int $page = 0, int $limit = 50): array {
-		// @TODO CRITICAL: fix SQL injection
-		$query = $this->db->query('SELECT forename, surname, group_id, exam_results
-			FROM students
-			ORDER BY ' . $order_field . ' ' . ($order_dir == self::ORDER_ASC ? 'ASC' : 'DESC') . ' ' .
-			'LIMIT ' . ($page * $limit) . ', ' . $limit);
+    public function get_all_students(string $order_field = 'forename', int $order_dir = self::ORDER_ASC, int $page = 0, int $limit = 50): array {
+        // @TODO CRITICAL: fix SQL injection
+        $query = $this->db->query('SELECT forename, surname, group_id, exam_results
+            FROM students
+            ORDER BY ' . $order_field . ' ' . ($order_dir == self::ORDER_ASC ? 'ASC' : 'DESC') . ' ' .
+            'LIMIT ' . ($page * $limit) . ', ' . $limit);
 
-		$students = array();
-		while (($row = $query->fetch(\PDO::FETCH_NUM))) {
-			$student = new Student;
-			$student->forename     = $row[0];
-			$student->surname      = $row[1];
-			$student->group_id     = $row[2];
-			$student->exam_results = $row[3];
-			array_push($students, $student);
-		}
+        $students = array();
+        while (($row = $query->fetch(\PDO::FETCH_NUM))) {
+            $student = new Student;
+            $student->forename     = $row[0];
+            $student->surname      = $row[1];
+            $student->group_id     = $row[2];
+            $student->exam_results = $row[3];
+            array_push($students, $student);
+        }
 
-		$query->closeCursor();
-		return $students;
-	}
+        $query->closeCursor();
+        return $students;
+    }
 
-	public function find_students(string $keyword, string $order_by, $order_dir = self::ORDER_ASC, $page = 0, $limit = 50) {
-		// @TODO CRITICAL: fix SQL injection
-		$s = 'SELECT forename, surname, group_id, exam_results
-			FROM students
-			WHERE CONCAT(forename, \' \', surname)
-			LIKE :keyword
-			ORDER BY ' . $order_by . ' ' . ($order_dir == self::ORDER_ASC ? 'ASC' : 'DESC') . ' ' .
-			'LIMIT ' . ($page * $limit) . ', ' . $limit;
-		$query = $this->db->prepare($s);
+    public function find_students(string $keyword, string $order_by, $order_dir = self::ORDER_ASC, $page = 0, $limit = 50) {
+        // @TODO CRITICAL: fix SQL injection
+        $s = 'SELECT forename, surname, group_id, exam_results
+            FROM students
+            WHERE CONCAT(forename, \' \', surname)
+            LIKE :keyword
+            ORDER BY ' . $order_by . ' ' . ($order_dir == self::ORDER_ASC ? 'ASC' : 'DESC') . ' ' .
+            'LIMIT ' . ($page * $limit) . ', ' . $limit;
+        $query = $this->db->prepare($s);
 
-		$keyword = '%'.$keyword.'%';
-		$query->bindParam(':keyword', $keyword, \PDO::PARAM_STR);
-		$query->execute();
+        $keyword = '%'.$keyword.'%';
+        $query->bindParam(':keyword', $keyword, \PDO::PARAM_STR);
+        $query->execute();
 
-		$students = array();
-		while ($row = $query->fetch(\PDO::FETCH_NUM)) {
-			$student = new Student;
-			$student->forename     = $row[0];
-			$student->surname      = $row[1];
-			$student->group_id     = $row[2];
-			$student->exam_results = $row[3];
-			array_push($students, $student);
-		}
+        $students = array();
+        while ($row = $query->fetch(\PDO::FETCH_NUM)) {
+            $student = new Student;
+            $student->forename     = $row[0];
+            $student->surname      = $row[1];
+            $student->group_id     = $row[2];
+            $student->exam_results = $row[3];
+            array_push($students, $student);
+        }
 
-		$query->closeCursor();
-		return $students;
-	}
+        $query->closeCursor();
+        return $students;
+    }
 }
