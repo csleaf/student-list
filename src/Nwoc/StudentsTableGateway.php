@@ -125,7 +125,11 @@ class StudentsTableGateway {
         return $student;
     }
 
-    public function get_student_with_cookie(string $cookie) {
+    /**
+    * Returns student that has specified cookie associated with it
+    * or null if student with such cookie does not exist.
+    */
+    public function get_student_with_cookie(string $cookie): Student {
         $query = $this->db->prepare('SELECT * FROM students WHERE cookie=?');
         $query->execute(array($cookie));
         if (($row = $query->fetch(\PDO::FETCH_NUM))) {
@@ -133,7 +137,7 @@ class StudentsTableGateway {
             return StudentsTableGateway::create_student_from_row($row);
         } else {
             $query->closeCursor();
-            return null; // @TODO or throw exception
+            return null;
         }
     }
 

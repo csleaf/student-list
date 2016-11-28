@@ -59,7 +59,8 @@ class ListController {
             'page' => $page + 1,
             'order' => $order,
             'search_query' => $search_query,
-            'get_params' => $_GET
+            'get_params' => $_GET,
+            'is_logged_in' => isset($_COOKIE['session']) ? ($gateway->get_student_with_cookie($_COOKIE['session']) != null) : false
         ));
     }
 }
