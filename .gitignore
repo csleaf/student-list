@@ -1,0 +1,4 @@
+compilation_cache/
+vendor/
+tools/genusers/users.sql
+app.ini
