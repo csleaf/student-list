@@ -1,0 +1,159 @@
+/* global */
+body {
+	font-family: Arial;
+	font-size: 12pt;
+	background: #dbe0fb;
+	margin: 0;
+	padding: 0;
+}
+
+.page {
+	margin: 18px auto 0 auto;
+	width: 780px;
+	background: #fff;
+	border-radius: 4px;
+	box-shadow: 0px 1px 4px rgba(0,0,0,0.13);
+}
+
+.page-inner {
+	padding: 0 15px 15px 15px;
+}
+
+input::-webkit-input-placeholder {
+	font-style: italic;
+	color: #AAAAAA;
+}
+
+input:focus::-webkit-input-placeholder {
+	color: transparent;
+}
+
+.placeholder-input {
+	padding-left: 2px;
+}
+
+.inline-form {
+	display: inline-block;
+}
+
+/* student search */
+.student-search {
+	text-align: right;
+	display: block;
+	margin-bottom: 8px;
+}
+
+.student-search input {
+	font-size: 11pt;
+}
+
+/* students list */
+.student-table {
+	padding: 0;
+	border-collapse: collapse;
+	width: 100%;
+}
+
+.student-table th {
+	background: #F7F7F7;
+}
+
+.student-table td,
+.student-table th {
+	padding: 8px 14px;
+}
+
+.student-table table,
+.student-table th,
+.student-table td {
+	border: 1px solid #DBDBDB;
+}
+
+.sort-display {
+	font-size: 10pt;
+	font-weight: bold;
+	color: black;
+	text-decoration: none;
+	text-shadow: 0 1px 1px rgba(0,0,0,0.11);
+}
+
+.sort-display:hover {
+	text-decoration: underline;
+}
+
+.column-highlight {
+	background: #ffe9e9;
+}
+
+/* header */
+.header {
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	background: #F9F9F9;
+	border-bottom: 1px solid #eeeeee;
+	margin-bottom: 15px;
+}
+
+.header-items {
+	list-style-type: none;
+	margin: 0 0 0 4px;
+	padding: 0;
+	overflow: hidden;
+}
+
+.header-items li {
+	float: left;
+}
+
+.header-items li a {
+	display: inline-block;
+	padding: 12px 12px;
+	line-height: 24px;
+	color: #4a76f9;
+	text-decoration: none;
+}
+
+.header-items li a:hover {
+	background: #4a76f9;
+	color: #fff;
+}
+
+/* register form */
+.register-form label {
+	display: block;
+	font-weight: bold;
+	font-size: 12pt;
+	margin-bottom: 4px;
+	color: #636363;
+}
+
+.register-form input[type="text"],
+.register-form input[type="email"],
+.register-form input[type="number"] {
+	display: block;
+	padding-left: 4px;
+	font-size: 12pt;
+	height: 24px;
+	width: 210px;
+	margin-bottom: 22px;
+}
+
+.register-form .exam-results {
+	width: 80px;
+}
+
+.register-form input[type="submit"] {
+	display: block;
+	font-size: 13pt;
+	font-weight: bold;
+	height: 34px;
+}
+
+.error-box {
+	background: #DA6A54;
+	padding: 9px;
+	color: white;
+	font-weight: bold;
+	border-radius: 4px;
+	margin: 8px 0 16px 0;
+}

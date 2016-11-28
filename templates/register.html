@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% import 'register_forms.html' as forms %}
+
+{% block content %}
+<p>Заполните форму снизу для регистрации. Все поля обязательны для заполнения.</p>
+
+{% if error_fields %}
+	{% if error_fields["system"] %}
+		{% for error in error_fields["system"] %}
+			{% for error in field_errors %}
+				<div class="error-box">
+					Произошла непредвиденная ошибка. Попробуйте отправить форму позже.
+				</div>
+			{% endfor %}
+		{% endfor %}
+	{% else %}
+		<div class="error-box">
+			В форме найдены ошибки. Пожалуйста, исправьте их и отправьте форму заново.
+		</div>
+	{% endif %}
+{% endif %}
+
+<div class="register-form">
+	<form action="/student.php" method="POST">
+		{{ forms.render_field("Имя", "forename", entered_form, error_fields, "text", "min='1' max='64' placeholder='Иван' required") }}
+		{{ forms.render_field("Фамилия", "surname", entered_form, error_fields, "text", "min='1' max='64' placeholder='Иванов' required") }}
+		{{ forms.render_field("E-mail", "email", entered_form, error_fields, "email", "placeholder='ivan.ivanov@example.com'") }}
+		<label for="gender">Пол</label>
+		<input type="radio" name="gender" value="male" required>Мужской
+		<input type="radio" name="gender" value="female" required>Женский
+		{{ forms.show_field_errors(error_fields, "gender") }}
+		{{ forms.render_field("Группа", "group_id", entered_form, error_fields, "text", "min='2' max='5' placeholder='ТФ141' required") }}
+		{{ forms.render_field("Сумма баллов по ЕГЭ", "exam_results", entered_form, error_fields, "number", "min='0' max='315' placeholder='175' required") }}
+		{{ forms.render_field("Год рождения", "birth_year", entered_form, error_fields, "number", "min='1900' max='2016' placeholder='1999' required") }}
+		<label for="is_foreign">Иностранец?</label>
+		<input type="radio" name="is_foreign" value="true" required>Да
+		<input type="radio" name="is_foreign" value="false" required>Нет
+		{{ forms.show_field_errors(error_fields, "is_foreign") }}
+		<input type='submit' value='Зарегистрироваться'>
+	</form>
+</div>
+{% endblock %}
