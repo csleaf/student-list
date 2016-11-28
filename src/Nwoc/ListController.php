@@ -58,7 +58,8 @@ class ListController {
 			'students' => $students,
 			'page' => $page + 1,
 			'order' => $order,
-			'search_query' => $search_query
+			'search_query' => $search_query,
+            'get_params' => $_GET
 		));
 	}
 }
