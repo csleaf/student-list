@@ -1,6 +1,6 @@
 CREATE DATABASE students
     DEFAULT CHARACTER SET cp1251 # database uses only cyrillic characters (cp1251)
-    DEFAULT COLLATE cp1251_bin;  # case-insensitive string comparison (cp1251_bin)
+    DEFAULT COLLATE cp1251_general_ci;  # case-insensitive string comparison (cp1251_general_ci)
     
 use students;
  
