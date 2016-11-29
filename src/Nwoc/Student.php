@@ -1,6 +1,9 @@
 <?php
 namespace Nwoc;
 
+/**
+* Represents table entry 'students' from database.
+*/
 class Student {
     const GENDER_MALE = 0;
     const GENDER_FEMALE = 1;

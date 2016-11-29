@@ -10,7 +10,11 @@ class RegistrationController {
         $this->template_engine = $template_engine;
     }
 
-    private function create_student(array &$dict) {
+    /**
+    * Creates new student from array, usually rethieved from $_POST global variable.
+    * All fields that are not set or has invalid type, will have value of NULL.
+    */
+    private function create_student(array &$dict): Student {
         $student = new Student;
         $student->forename =         isset($dict['forename']) ? strval($dict['forename'])     : NULL;
         $student->surname =           isset($dict['surname']) ? strval($dict['surname'])      : NULL;
@@ -40,11 +44,18 @@ class RegistrationController {
         return $student;
     }
 
+    /**
+    * Creates new database gateway, registers student and returns it's
+    * cookie in &$cookie variable.
+    */
     private function register_student(Student $student, string &$cookie) {
         $gateway = new StudentsTableGateway($this->db);
         $gateway->register_student($student, $cookie);
     }
 
+    /**
+    * Handles user request and returns view representation.
+    */
     public function handle() {
         $env = array('title' => 'Регистрация');
         $student = null;

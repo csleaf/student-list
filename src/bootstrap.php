@@ -1,11 +1,17 @@
 <?php
 require_once __DIR__.'/../vendor/autoload.php';
 
+/**
+* Provides default database and template engine settings.
+*/
 class Bootstrap {
     private $db;
     private $template_engine;
 
-    function get_database($cfg = null) {
+    /**
+    * Establishes connection with MySQL database using specified configuration settings.
+    */
+    function get_database(array $cfg = null): \PDO {
         if (!$cfg)
             $cfg = parse_ini_file(__DIR__.'/../app.ini', true)['db'];
 
@@ -21,12 +27,11 @@ class Bootstrap {
 
         return $db;
     }
- 
-    function get_session() {
-        return new Nwoc\Session;
-    }
 
-    function get_template_engine() {
+    /**
+    * Initializes Twig template engine and returns it.
+    */
+    function get_template_engine(): Twig_Environment {
         $loader = new Twig_Loader_Filesystem(__DIR__.'/../templates');
         $env = array(/*'cache' => __DIR__.'/../compilation_cache'*/);
         $twig = new Twig_Environment($loader, $env);

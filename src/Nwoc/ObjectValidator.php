@@ -1,6 +1,9 @@
 <?php
 namespace Nwoc;
 
+/**
+* Represents generic validator for any object.
+*/
 class ObjectValidator {
     /*
         should be integers! _MSG counterparts must have value of 'option value' + 1.
@@ -40,8 +43,10 @@ class ObjectValidator {
     }
 
     public function validate($object, array &$errors, string $field = null) {
+        if (!isset($object))
+            throw new \Exception('$object is not set.');
         if (!isset($errors))
-            throw new \Exception('&$errors is null.');
+            throw new \Exception('&$errors is not set.');
         if (count($this->options) == 0)
             throw new \Exception('No options for validation are set.');
 

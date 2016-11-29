@@ -4,6 +4,9 @@ namespace Nwoc;
 class SecurityUtil {
     const GENERATE_ALLOWED_CHARS = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFHIJKLMNOPQRSTUVWXYZ';
 
+    /**
+    * Generates string of specified size with random characters [A-Za-z0-9] inside it.
+    */
     public static function generate_session_id(int $size = 32) {
         $len = strlen(self::GENERATE_ALLOWED_CHARS);
         $out = str_repeat('x', $size);

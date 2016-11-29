@@ -1,6 +1,9 @@
 <?php
 namespace Nwoc;
 
+/**
+* Provides easy to use database queries against 'students' table.
+*/
 class StudentsTableGateway {
     const NAME_REGEXP = "/^[А-Яа-я' ]+$/u";
     const GROUP_REGEXP = "/^[А-Яа-я0-9]+$/u";
@@ -13,6 +16,10 @@ class StudentsTableGateway {
         $this->db = $pdo;
     }
 
+    /**
+    * Validates student against predefined set of rules. Throws ValidationException with
+    * errors property that contains validation errors if student validation failed.
+    */
     public function validate_student(Student $student) {
         $errors = array();
 
@@ -96,6 +103,10 @@ class StudentsTableGateway {
         }
     }
 
+    /**
+    * Registers student in database and returns it's cookie in &$cookie variable.
+    * Student must be validated before it's registered.
+    */
     public function register_student(Student $student, string &$cookie) {
         $this->validate_student($student);
         $cookie = SecurityUtil::generate_session_id();
@@ -112,6 +123,9 @@ class StudentsTableGateway {
                                     $cookie));
     }
 
+    /**
+    * Parses result from database query and returns complete Student class instance.
+    */
     private static function create_student_from_row(array $row): Student {
         $student = new Student;
         $student->forename =     strval($row[0]);
@@ -141,6 +155,10 @@ class StudentsTableGateway {
         }
     }
 
+    /**
+    * Queries database to get students ordered by field $order_field, sorted in
+    * ascending or descending order, with page and entries limit.
+    */
     public function get_all_students(string $order_field = 'forename', int $order_dir = self::ORDER_ASC, int $page = 0, int $limit = 50): array {
         // @TODO CRITICAL: fix SQL injection
         $query = $this->db->query('SELECT forename, surname, group_id, exam_results
@@ -162,7 +180,10 @@ class StudentsTableGateway {
         return $students;
     }
 
-    public function find_students(string $keyword, string $order_by, $order_dir = self::ORDER_ASC, $page = 0, $limit = 50) {
+    /**
+    * Searches all students by keyword, ordered by field and has page and limit.
+    */
+    public function find_students(string $keyword, string $order_by = 'forename', $order_dir = self::ORDER_ASC, $page = 0, $limit = 50) {
         // @TODO CRITICAL: fix SQL injection
         $s = 'SELECT forename, surname, group_id, exam_results
             FROM students
