@@ -157,3 +157,12 @@ input:focus::-webkit-input-placeholder {
     border-radius: 4px;
     margin: 8px 0 16px 0;
 }
+
+.info-box {
+    background: #5492da;
+    padding: 9px;
+    color: white;
+    font-weight: bold;
+    border-radius: 4px;
+    margin: 8px 0 16px 0;
+}

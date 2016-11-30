@@ -52,7 +52,7 @@ class ListController {
             $search_query = NULL;
         }
 
-        return $this->template_engine->render('list.html', array(
+        return $this->template_engine->render('list.twig', array(
             'title' => 'Список абитуриентов',
             'sort_by' => $sort_by,
             'students' => $students,

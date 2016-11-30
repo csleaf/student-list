@@ -19,8 +19,10 @@ class StudentsTableGateway {
     /**
     * Validates student against predefined set of rules. Throws ValidationException with
     * errors property that contains validation errors if student validation failed.
+    * $check_email_registration parameter handles checking that email is already registered
+    * within system.
     */
-    public function validate_student(Student $student) {
+    public function validate_student(Student $student, bool $check_email_registration) {
         $errors = array();
 
         // forename
@@ -42,8 +44,9 @@ class StudentsTableGateway {
         $validator->clear();
         $validator->min_length(1, 'Вы не задали свой e-mail.')
                   ->max_length(64, 'Вы ввели слишком длинный e-mail, максимальное кол-во символов: :inparam, вы ввели: :outparam символов.');
-        if ($validator->validate($student->email, $errors, 'email') == 0) {
-            // @TODO optimize
+
+        if ($validator->validate($student->email, $errors, 'email') == 0 && $check_email_registration) {
+            // @TODO optimize query
             $query = $this->db->prepare('SELECT COUNT(email) FROM students WHERE email=?');
             $query->execute(array(strval($student->email)));
             $result = $query->fetch(\PDO::FETCH_NUM);
@@ -105,14 +108,33 @@ class StudentsTableGateway {
 
     /**
     * Registers student in database and returns it's cookie in &$cookie variable.
-    * Student must be validated before it's registered.
     */
-    public function register_student(Student $student, string &$cookie) {
-        $this->validate_student($student);
+    public function register_student(Student $student): string {
+        $this->validate_student($student, true);
         $cookie = SecurityUtil::generate_session_id();
 
         $stmt = $this->db->prepare('INSERT INTO students(forename, surname, email, group_id, exam_results, birth_year, is_foreign, gender, cookie) VALUES (?,?,?,?,?,?,?,?,?)');
-        return $stmt->execute(array(strval($student->forename),
+        $stmt->execute(array(strval($student->forename),
+                                    strval($student->surname),
+                                    strval($student->email),
+                                    strval($student->group_id),
+                                    intval($student->exam_results),
+                                    intval($student->birth_year),
+                                    intval($student->is_foreign),
+                                    intval($student->gender),
+                                    $cookie));
+
+        return $cookie;
+    }
+
+    /**
+    * Updates student with cookie $cookie with data from $student.
+    */
+    public function update_student(string $cookie, Student $student) {
+        $this->validate_student($student, false);
+
+        $stmt = $this->db->prepare('UPDATE students SET forename=?, surname=?, email=?, group_id=?, exam_results=?, birth_year=?, is_foreign=?, gender=? WHERE cookie=?');
+        $stmt->execute(array(strval($student->forename),
                                     strval($student->surname),
                                     strval($student->email),
                                     strval($student->group_id),

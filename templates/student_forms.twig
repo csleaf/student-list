@@ -1,9 +1,8 @@
-
 {% macro show_field_errors(errorTable, fieldName) %}
     {% if errorTable[fieldName] %}
         <div class="error" />
         {% for error in errorTable[fieldName] %}
-            <li>{{ error }}</li>
+            <li>{{ error }}</li> 
         {% endfor %}
         </div>
     {% endif %}
@@ -21,3 +20,4 @@
 
     {{ bla.show_field_errors(errorTable, fieldName) }}
 {% endmacro %}
+ 

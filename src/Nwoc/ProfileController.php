@@ -1,7 +1,10 @@
 <?php
 namespace Nwoc;
 
-class RegistrationController {
+/**
+* Manages student profile, handles registering and editing student information.
+*/
+class ProfileController {
     private $db;
     private $template_engine;
 
@@ -45,37 +48,47 @@ class RegistrationController {
     }
 
     /**
-    * Creates new database gateway, registers student and returns it's
-    * cookie in &$cookie variable.
-    */
-    private function register_student(Student $student, string &$cookie) {
-        $gateway = new StudentsTableGateway($this->db);
-        $gateway->register_student($student, $cookie);
-    }
-
-    /**
     * Handles user request and returns view representation.
     */
     public function handle() {
-        $env = array('title' => 'Регистрация');
-        $student = null;
+        $env = array();
+        $gateway = new StudentsTableGateway($this->db);
+        if (isset($_COOKIE['session'])) {
+            $student = $gateway->get_student_with_cookie(strval($_COOKIE['session']));
+            $env['entered_form'] = $student;
+        }
+        $env['is_logged_in'] = isset($student);
 
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
             // @TODO XSRF
-            try {
-                $cookie = "";
-                $student = $this->create_student($_POST);
-                $this->register_student($student, $cookie);
-                setcookie('session', $cookie, time() + 60*60*24*365*10);
-                // @TODO change domain
-                header('Location: http://localhost/index.php', true, 303);
-                return;
-            } catch (ValidationException $e) {
-                $env['entered_form'] = $student;
-                $env['error_fields'] = $e->errors;
+            $action = strval($_POST['action']);
+            if ($action == 'register' && !isset($student)) {
+                try {
+                    $student = $this->create_student($_POST);
+                    $cookie = $gateway->register_student($student, $cookie);
+                    setcookie('session', $cookie, time() + 60*60*24*365*10);
+                    // @TODO change domain
+                    header('Location: http://localhost/index.php?notify=registered', true, 303);
+                    return;
+                } catch (ValidationException $e) {
+                    $env['entered_form'] = $student;
+                    $env['error_fields'] = $e->errors;
+                }
+            }
+            else if ($action == 'edit' && isset($student)) {
+                // @TODO
+                try {
+                    $student = $this->create_student($_POST);
+                    $gateway->update_student($_COOKIE['session'], $student);
+                    $env['entered_form'] = $student;
+                    $env['notify'] = 'edit_successful';
+                } catch (ValidationException $e) {
+                    $env['entered_form'] = $e->target;
+                    $env['error_fields'] = $e->errors;
+                }
             }
         }
 
-        return $this->template_engine->render('register.html', $env);
+        return $this->template_engine->render('profile.twig', $env);
     }
 }

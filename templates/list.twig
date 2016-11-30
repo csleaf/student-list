@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base.twig" %}
 {% import _self as me %}
 
 {% set props = {"forename": "Имя", "surname": "Фамилия", "group_id": "Номер группы", "exam_results": "Баллов"} %}
@@ -26,6 +26,12 @@
 {% endmacro %}
 
 {% block content %}
+{% if is_logged_in and get_params['notify'] == 'registered' %}
+    <div class="info-box">
+        Вы успешно зарегистрировались!
+    </div>
+{% endif %}
+
 <div class='student-search'>
     <span>Поиск: </span>
     <form class='inline-form' action='/index.php' type='GET'>
