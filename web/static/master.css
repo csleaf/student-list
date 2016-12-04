@@ -207,14 +207,17 @@ label.error-highlight {
     margin: 16px 0 0 0;
 }
 
-.page-selector-item {
-    background: #dbe0fb;
-    border: 1px solid black;
+a.page-selector-item {
+    /*background: #dbe0fb;*/
+    /*border: 1px solid black;*/
     padding: 2px;
+    color: #5c7bd9;
+    //text-decoration: none;
 }
 
-.page-selector-item-active {
-    background: red;
-    color: white;
+a.page-selector-item-active {
+    /*background: red;*/
+    /*color: white;*/
     font-weight: bold;
+    color: black;
 }
