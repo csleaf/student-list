@@ -31,8 +31,8 @@ class ProfileController {
         else
             $student->gender = DataConversionUtil::map_values(
                 strval($dict['gender']),
-                array('male'   => Student::GENDER_MALE,
-                      'female' => Student::GENDER_FEMALE),
+                array('0' => Student::GENDER_MALE,
+                      '1' => Student::GENDER_FEMALE),
                 NULL);
 
         if (!isset($dict['is_foreign']))
@@ -40,8 +40,8 @@ class ProfileController {
         else
             $student->is_foreign = DataConversionUtil::map_values(
                 strval($dict['is_foreign']),
-                array('true'  => intval(1),
-                      'false' => intval(0)),
+                array('1' => intval(1),
+                      '0' => intval(0)),
                 NULL);
 
         return $student;
