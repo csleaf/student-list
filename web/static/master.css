@@ -208,16 +208,12 @@ label.error-highlight {
 }
 
 a.page-selector-item {
-    /*background: #dbe0fb;*/
-    /*border: 1px solid black;*/
     padding: 2px;
     color: #5c7bd9;
     //text-decoration: none;
 }
 
 a.page-selector-item-active {
-    /*background: red;*/
-    /*color: white;*/
     font-weight: bold;
     color: black;
 }
