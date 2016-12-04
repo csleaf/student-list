@@ -70,7 +70,7 @@ class StudentValidator {
         // exam_results
         if (!isset($student->exam_results)) {
             $errors['exam_results'] = array('Вы не ввели свои баллы по ЕГЭ.');
-        } elseif (!ctype_digit(intval($student->exam_results))
+        } elseif (!ctype_digit($student->exam_results))
               && (intval($student->exam_results) <= 0 || intval($student->exam_results) > 315))
         {
             $errors['exam_results'] = array('Введите свои баллы по ЕГЭ от 1 до 315.');
