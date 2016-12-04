@@ -25,10 +25,10 @@ class ObjectValidator {
         $this->string_encoding = $string_encoding;
     }
 
-    private function get_error_msg(string $msg, string $default, string $inparam = null, string$outparam = null) {
+    private function get_error_msg(int $msgID, string $default, string $inparam = null, string $outparam = null) {
         $msg = null;
-        if (isset($this->options[$msg]))
-            $msg = $this->options[$msg];
+        if (isset($this->options[$msgID]))
+            $msg = $this->options[$msgID];
         else
             $msg = $default;
         if (isset($inparam)) $msg = str_replace(':inparam', $inparam, $msg);

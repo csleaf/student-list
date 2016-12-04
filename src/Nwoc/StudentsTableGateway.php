@@ -45,7 +45,7 @@ class StudentsTableGateway {
         $validator->min_length(1, 'Вы не задали свой e-mail.')
                   ->max_length(64, 'Вы ввели слишком длинный e-mail, максимальное кол-во символов: :inparam, вы ввели: :outparam символов.');
 
-        if ($validator->validate($student->email, $errors, 'email') == 0 && $check_email_registration) {
+        if ($validator->validate($student->email, $errors, 'email') === 0 && $check_email_registration) {
             // @TODO optimize query
             $query = $this->db->prepare('SELECT COUNT(email) FROM students WHERE email=?');
             $query->execute(array(strval($student->email)));
@@ -57,7 +57,7 @@ class StudentsTableGateway {
         }
 
         // gender
-        if (!($student->gender == Student::GENDER_MALE || $student->gender == Student::GENDER_FEMALE))
+        if (!($student->gender === Student::GENDER_MALE || $student->gender === Student::GENDER_FEMALE))
         {
             $errors['gender'] = array('Вы не выбрали свой пол.');
         }
@@ -68,8 +68,8 @@ class StudentsTableGateway {
         } else {
             $validator->clear();
             $validator->min_length(2, 'Название группы состоит как минимум из :inparam символов, вы ввели :outparam символов')
-                      ->max_length(5, 'Название группы слишком длинное: оно должно быть не более :inparam символов, вы ввели :outparam символов.')
-                      ->regexp_match(self::GROUP_REGEXP, 'Название группы должно быть от 2-х до 5-ти символов и может включать лишь буквы от А до Я и цифры.')
+                      ->max_length(5, 'Название группы должно быть не более :inparam символов, вы ввели :outparam символов.')
+                      ->regexp_match(self::GROUP_REGEXP, 'Название группы должно включать лишь буквы от А до Я и цифры.')
                       ->validate($student->group_id, $errors, 'group_id');
         }
 
@@ -95,8 +95,8 @@ class StudentsTableGateway {
 
         // is_foreign
         if (!isset($student->is_foreign)
-          && !(intval($student->is_foreign) == 0 /* false */
-          ||   intval($student->is_foreign) == 1 /* true  */))
+          && !(intval($student->is_foreign) === 0 /* false */
+          ||   intval($student->is_foreign) === 1 /* true  */))
         {
             $errors['is_foreign'] = array('Вы не указали свой статус.');
         }

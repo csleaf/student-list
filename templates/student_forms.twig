@@ -1,23 +1,62 @@
 {% macro show_field_errors(errorTable, fieldName) %}
     {% if errorTable[fieldName] %}
-        <div class="error" />
-        {% for error in errorTable[fieldName] %}
-            <li>{{ error }}</li> 
-        {% endfor %}
+        <div class="form-error-box">
+            <ul>
+            {% for error in errorTable[fieldName] %}
+                <li>{{ error }}</li> 
+            {% endfor %}
+            </ul>
         </div>
     {% endif %}
 {% endmacro %}
 
+{#
+    Renders form field.
+    @label: label text to show.
+    @fieldName: field name that will be set in $_POST variable after sending the form.
+    @enteredForm: array that may contain field value from previous form upload.
+    @errorTable: array with field errors.
+    @type: input field type.
+    @ext: any HTML code that will be appended to "input" tag.
+#}
 {% macro render_field(label, fieldName, enteredForm, errorTable, type, ext) %}
     {% import _self as bla %}
+    {% set hasErrors = errorTable[fieldName] != null %}
 
-    <label for="{{ fieldName }}">{{ label }}</label>
+    <label for="{{ fieldName }}" {% if hasErrors %}class="error-highlight"{% endif %}>{{ label }}</label>
     {% if attribute(enteredForm, fieldName) != null %}
-        <input type="{{ type }}" name="{{ fieldName }}" value="{{ attribute(enteredForm, fieldName) }}" {{ ext|raw }}>
+        <input type="{{ type }}" name="{{ fieldName }}" {% if hasErrors %}class="error-highlight-input"{% endif %} value="{{ attribute(enteredForm, fieldName) }}" {{ ext|raw }}>
     {% else %}
-        <input type="{{ type }}" name="{{ fieldName }}" {{ ext|raw }}>
+        <input type="{{ type }}" name="{{ fieldName }}" {% if hasErrors %}class="error-highlight-input"{% endif %} {{ ext|raw }}>
     {% endif %}
 
     {{ bla.show_field_errors(errorTable, fieldName) }}
 {% endmacro %}
  
+{#
+    Special render macro for checkboxes.
+    @label: label text to show
+    @fieldName: field name that will be set in $_POST variable after sending the form.
+    @enteredForm: array that may contain field value from previous form upload.
+    @errorTable: array with field errors.
+    @varargs: pairs of three values required to create checkbox (all values required)
+        - checkbox text that will be presented in UI.
+        - value that will be sent in $_POST if this checkbox is checked.
+        - additional HTML code that will be appended to "input" tag.
+#}
+{% macro render_checkbox_field(label, fieldName, enteredForm, errorTable) %}
+    {% import _self as bla %}
+    {% set numCheckboxes = ((varargs|length) / 3) %}
+    {% set hasErrors = errorTable[fieldName] != null %}
+    {% set enteredFormValue = attribute(enteredForm, fieldName) %}
+
+    <label for="{{ fieldName }}" {% if hasErrors %}class="error-highlight"{% endif %}>{{ label }}</label>
+    {% for i in range(0, numCheckboxes - 1) %}
+        {% set checkboxName = varargs[i*3 + 0] %}
+        {% set defValue = varargs[i*3 + 1] %}
+        {% set extCode = varargs[i*3 + 2] %}
+        <input type="radio" name="{{ fieldName }}" value="{{ defValue }}" {% if enteredFormValue == defValue %}checked{% endif %} {{ extCode }}><span {% if hasErrors %}class="error-highlight"{% endif %}>{{ checkboxName }}</span>
+    {% endfor %}
+
+    {{ bla.show_field_errors(errorTable, fieldName) }}
+{% endmacro %}

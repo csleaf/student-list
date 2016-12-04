@@ -35,17 +35,17 @@
         {{ forms.render_field("Имя", "forename", entered_form, error_fields, "text", "min='1' max='64' placeholder='Иван' required") }}
         {{ forms.render_field("Фамилия", "surname", entered_form, error_fields, "text", "min='1' max='64' placeholder='Иванов' required") }}
         {{ forms.render_field("E-mail", "email", entered_form, error_fields, "email", "placeholder='ivan.ivanov@example.com'") }}
-        <label for="gender">Пол</label>
-        <input type="radio" name="gender" value="male" required>Мужской
-        <input type="radio" name="gender" value="female" required>Женский
-        {{ forms.show_field_errors(error_fields, "gender") }}
+        {{ forms.render_checkbox_field("Пол", "gender", entered_form, error_fields,
+            "Мужской", "male", "",
+            "Женский", "female", ""
+        ) }}
         {{ forms.render_field("Группа", "group_id", entered_form, error_fields, "text", "min='2' max='5' placeholder='ТФ141' required") }}
         {{ forms.render_field("Сумма баллов по ЕГЭ", "exam_results", entered_form, error_fields, "number", "min='0' max='315' placeholder='175' required") }}
         {{ forms.render_field("Год рождения", "birth_year", entered_form, error_fields, "number", "min='1900' max='2016' placeholder='1999' required") }}
-        <label for="is_foreign">Иностранец?</label>
-        <input type="radio" name="is_foreign" value="true" required>Да
-        <input type="radio" name="is_foreign" value="false" required>Нет
-        {{ forms.show_field_errors(error_fields, "is_foreign") }}
+        {{ forms.render_checkbox_field("Иностранец?", "is_foreign", entered_form, error_fields,
+            "Да", "true", "required",
+            "Нет", "false", "required"
+        ) }}
         <input type='hidden' name='action' value='{% if is_logged_in %}edit{% else %}register{% endif %}'>
         <input type='submit' value='{% if is_logged_in %}Сохранить{% else %}Зарегистрироваться{% endif %}'>
     </form>

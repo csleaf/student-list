@@ -127,6 +127,11 @@ input:focus::-webkit-input-placeholder {
     color: #636363;
 }
 
+.register-form label,
+.register-form input[type="submit"] {
+    margin-top: 16px;
+}
+
 .register-form input[type="text"],
 .register-form input[type="email"],
 .register-form input[type="number"] {
@@ -135,8 +140,17 @@ input:focus::-webkit-input-placeholder {
     font-size: 12pt;
     height: 24px;
     width: 210px;
-    margin-bottom: 22px;
 }
+
+.error-highlight-input {
+    box-shadow: 0px 0px 4px #DA6A54;
+    border: 1px solid #DA6A54;
+}
+
+label.error-highlight {
+    color: #DA6A54;
+}
+
 
 .register-form .exam-results {
     width: 80px;
@@ -149,6 +163,15 @@ input:focus::-webkit-input-placeholder {
     height: 34px;
 }
 
+.info-box {
+    background: #5492da;
+    padding: 9px;
+    color: white;
+    font-weight: bold;
+    border-radius: 4px;
+    margin: 8px 0 16px 0;
+}
+
 .error-box {
     background: #DA6A54;
     padding: 9px;
@@ -158,11 +181,24 @@ input:focus::-webkit-input-placeholder {
     margin: 8px 0 16px 0;
 }
 
-.info-box {
-    background: #5492da;
+.form-error-box {
+    border: 3px solid #DA6A54;
     padding: 9px;
-    color: white;
+    color: black;
     font-weight: bold;
     border-radius: 4px;
     margin: 8px 0 16px 0;
+}
+
+.form-error-box ul {
+    margin: 0;
+    padding: 0 18px;
+}
+
+.form-error-box li {
+    margin-bottom: 6px;
+}
+
+.form-error-box li:last-child {
+    margin-bottom: 0;
 }
