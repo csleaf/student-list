@@ -16,7 +16,7 @@ class Bootstrap {
             $cfg = parse_ini_file(__DIR__.'/../app.ini', true)['db'];
 
         $db = new PDO(
-            "mysql:host={$cfg['hostname']};dbname={$cfg['dbname']};charset=utf8mb4",
+            "mysql:host={$cfg['hostname']};dbname=students;charset=utf8mb4",
             $cfg['username'],
             $cfg['password'],
             array(

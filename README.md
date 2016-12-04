@@ -20,16 +20,12 @@ mysql> exit
 ```bash
 $ composer update
 ```
-* Configure Apache to use PHP and serve files from web/ folder.
-* Generate stub users using tools/genusers/genusers.py. This tool will generate `users.sql` file that must be run like `db.sql` file.
+* Configure Apache to use PHP and serve files from `web/` folder.
+* Generate stub users using `tools/genusers/genusers.py`. This tool will generate `users.sql` file that must be run like `db.sql` file.
 * Create `app.ini` file in root folder:
 ```ini
 [db]
 username=<mysql username>
 password=<mysql user password>
 hostname=<mysql hostname>
-dbname=students
-
-[students_table]
-limit=50
 ```
