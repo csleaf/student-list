@@ -65,6 +65,7 @@ class ProfileController {
             if ($action == 'register' && !isset($student)) {
                 try {
                     $student = $this->create_student($_POST);
+                    StudentValidator::validate($student, $gateway, true);
                     $cookie = $gateway->register_student($student, $cookie);
                     $origin = SiteUtil::get_server_origin_url($_SERVER);
                     setcookie('session', $cookie, time() + 60*60*24*365*10);
@@ -79,6 +80,7 @@ class ProfileController {
                 // @TODO
                 try {
                     $student = $this->create_student($_POST);
+                    StudentValidator::validate($student, $gateway, false);
                     $gateway->update_student($_COOKIE['session'], $student);
                     $env['entered_form'] = $student;
                     $env['notify'] = 'edit_successful';
