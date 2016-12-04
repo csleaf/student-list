@@ -2,7 +2,7 @@
 namespace Nwoc;
 
 class SecurityUtil {
-    const GENERATE_ALLOWED_CHARS = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFHIJKLMNOPQRSTUVWXYZ';
+    const GENERATE_ALLOWED_CHARS = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
     /**
     * Generates string of specified size with random characters [A-Za-z0-9] inside it.
