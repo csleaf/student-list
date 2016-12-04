@@ -19,12 +19,12 @@ class ProfileController {
     */
     private function create_student(array &$dict): Student {
         $student = new Student;
-        $student->forename =         isset($dict['forename']) ? strval($dict['forename'])     : NULL;
-        $student->surname =           isset($dict['surname']) ? strval($dict['surname'])      : NULL;
-        $student->email =               isset($dict['email']) ? strval($dict['email'])        : NULL;
-        $student->group_id =         isset($dict['group_id']) ? strval($dict['group_id'])     : NULL;
-        $student->exam_results = isset($dict['exam_results']) ? intval($dict['exam_results']) : NULL;
-        $student->birth_year =     isset($dict['birth_year']) ? intval($dict['birth_year'])   : NULL;
+        $student->forename =         isset($dict['forename']) ? trim(strval($dict['forename'])) : NULL;
+        $student->surname =           isset($dict['surname']) ? trim(strval($dict['surname']))  : NULL;
+        $student->email =               isset($dict['email']) ? trim(strval($dict['email']))    : NULL;
+        $student->group_id =         isset($dict['group_id']) ? trim(strval($dict['group_id'])) : NULL;
+        $student->exam_results = isset($dict['exam_results']) ? intval($dict['exam_results'])   : NULL;
+        $student->birth_year =     isset($dict['birth_year']) ? intval($dict['birth_year'])     : NULL;
 
         if (!isset($dict['gender']))
             $student->gender = NULL;

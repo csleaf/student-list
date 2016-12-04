@@ -68,10 +68,22 @@ class StudentsTableGateway {
     }
 
     /**
+     * Returns true if student with such email is registered.
+     */
+    public function is_student_with_email_registered(string $email): bool {
+        $query = $this->db->prepare("SELECT COUNT(email) FROM students WHERE email=? LIMIT 1");
+        $query->execute(array($email));
+        $result = $query->fetch(\PDO::FETCH_NUM);
+        $is_registered = intval($result[0]) != 0;
+        $query->closeCursor();
+        return $is_registered;
+    }
+
+    /**
     * Returns student that has specified cookie associated with it
     * or null if student with such cookie does not exist.
     */
-    public function get_student_with_cookie(string $cookie): Student {
+    public function get_student_with_cookie(string $cookie) {
         $query = $this->db->prepare('SELECT * FROM students WHERE cookie=?');
         $query->execute(array($cookie));
         if (($row = $query->fetch(\PDO::FETCH_NUM))) {

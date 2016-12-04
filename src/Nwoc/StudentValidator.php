@@ -45,13 +45,9 @@ class StudentValidator {
                   ->regexp_match(self::EMAIL_REGEXP, 'В e-mail должен присутствовать символ \'@\'.');
 
         if ($validator->validate($student->email, $errors, 'email') === 0 && $validateEmailCollision) {
-            $query = $this->db->prepare('SELECT COUNT(email) FROM students WHERE email=? LIMIT 1');
-            $query->execute(array(strval($student->email)));
-            $result = $query->fetch(\PDO::FETCH_NUM);
-            if (intval($result[0]) != 0) {
+            if ($gateway->is_student_with_email_registered($student->email)) {
                 $errors['email'] = array('Студент с таким E-mail уже зарегистрирован.');
             }
-            $query->closeCursor();
         }
 
         // gender
@@ -65,7 +61,7 @@ class StudentValidator {
             $errors['group_id'] = array('Вы не указали название своей группы.');
         } else {
             $validator->clear();
-            $validator->min_length(2, 'Название группы состоит как минимум из :inparam символов, вы ввели :outparam символов')
+            $validator->min_length(2, 'Название группы состоит как минимум из :inparam символов, вы ввели :outparam символов.')
                       ->max_length(5, 'Название группы должно быть не более :inparam символов, вы ввели :outparam символов.')
                       ->regexp_match(self::GROUP_REGEXP, 'Название группы должно включать лишь буквы от А до Я и цифры.')
                       ->validate($student->group_id, $errors, 'group_id');
@@ -77,7 +73,7 @@ class StudentValidator {
         } elseif (!ctype_digit(intval($student->exam_results))
               && (intval($student->exam_results) <= 0 || intval($student->exam_results) > 315))
         {
-            $errors['exam_results'] = array('Введите свои баллы по ЕГЭ от 0 до 315.');
+            $errors['exam_results'] = array('Введите свои баллы по ЕГЭ от 1 до 315.');
         }
 
         // birth_year
