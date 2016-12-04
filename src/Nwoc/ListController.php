@@ -26,7 +26,10 @@ class ListController {
         }
 
         if (isset($_GET['page']) && ctype_digit($_GET['page'])) {
-            $page = intval($_GET['page']);
+            $page = intval($_GET['page']) - 1;
+            if ($page < 0) {
+                $page = 0;
+            }
         } else {
             $page = 0;
         }
@@ -56,7 +59,8 @@ class ListController {
             'title' => 'Список абитуриентов',
             'sort_by' => $sort_by,
             'students' => $students,
-            'page' => $page + 1,
+            'curr_page' => $page + 1,
+            'max_pages' => intval($gateway->count_students() / 50),
             'order' => $order,
             'search_query' => $search_query,
             'get_params' => $_GET,

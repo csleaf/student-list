@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-import random, json, urllib2, codecs
+import sys, random, json, urllib2, codecs
 
 generateChars = u"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 sqlBoilerplate = """SET NAMES 'utf8mb4';
@@ -54,16 +54,22 @@ def generateSqlStatement(u):
   return u"('{}', '{}', '{}', {}, '{}', {}, {}, {}, '{}')".format(u.forename, u.surname, u.email, u.gender, u.group, u.examResults, u.birthYear, u.isForeign, u.cookie)
 
 if __name__ == "__main__":
+  if len(sys.argv) > 1:
+    try:
+      numUsers = int(sys.argv[1])
+    except ValueError as e:
+      print("Error setting number of users to generate: \"{}\"".format(e))
+      sys.exit(1)
+
   print("Generating {} users...".format(numUsers))
   random.seed();
   fi = codecs.open(outputFile, 'w', 'utf-8')
   stmts = list()
-  for i in range(10):
+  for i in range(numUsers):
     stmts.append(generateSqlStatement(generateUser()))
   fi.write(sqlBoilerplate)
   fi.write(",\n".join(stmts))
   fi.write(";\n")
   fi.close()
   print("Done! Open mysql and execute {} to add new users.".format(outputFile))
-    
-
+  sys.exit(0)

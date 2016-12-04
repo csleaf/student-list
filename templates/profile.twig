@@ -36,8 +36,8 @@
         {{ forms.render_field("Фамилия", "surname", entered_form, error_fields, "text", "min='1' max='64' placeholder='Иванов' required") }}
         {{ forms.render_field("E-mail", "email", entered_form, error_fields, "email", "placeholder='ivan.ivanov@example.com'") }}
         {{ forms.render_checkbox_field("Пол", "gender", entered_form, error_fields,
-            "Мужской", "male", "",
-            "Женский", "female", ""
+            "Мужской", "male", "required",
+            "Женский", "female", "required"
         ) }}
         {{ forms.render_field("Группа", "group_id", entered_form, error_fields, "text", "min='2' max='5' placeholder='ТФ141' required") }}
         {{ forms.render_field("Сумма баллов по ЕГЭ", "exam_results", entered_form, error_fields, "number", "min='0' max='315' placeholder='175' required") }}

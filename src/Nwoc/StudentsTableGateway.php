@@ -202,6 +202,13 @@ class StudentsTableGateway {
         return $students;
     }
 
+    public function count_students(): int {
+        $query = $this->db->query('SELECT COUNT(*) FROM students');
+        $result = intval($query->fetch(\PDO::FETCH_NUM)[0]);
+        $query->closeCursor();
+        return $result;
+    }
+
     /**
     * Searches all students by keyword, ordered by field and has page and limit.
     */

@@ -202,3 +202,19 @@ label.error-highlight {
 .form-error-box li:last-child {
     margin-bottom: 0;
 }
+
+.page-selector {
+    margin: 16px 0 0 0;
+}
+
+.page-selector-item {
+    background: #dbe0fb;
+    border: 1px solid black;
+    padding: 2px;
+}
+
+.page-selector-item-active {
+    background: red;
+    color: white;
+    font-weight: bold;
+}
