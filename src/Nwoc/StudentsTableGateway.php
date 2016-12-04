@@ -216,7 +216,7 @@ class StudentsTableGateway {
         // @TODO CRITICAL: fix SQL injection
         $s = 'SELECT forename, surname, group_id, exam_results
             FROM students
-            WHERE CONCAT(forename, \' \', surname)
+            WHERE CONCAT(forename, \' \', surname, \' \', group_id, \' \', exam_results)
             LIKE :keyword
             ORDER BY ' . $order_by . ' ' . ($order_dir == self::ORDER_ASC ? 'ASC' : 'DESC') . ' ' .
             'LIMIT ' . ($page * $limit) . ', ' . $limit;
