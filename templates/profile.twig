@@ -32,7 +32,7 @@
 
 <div class="register-form">
     <form action="/student.php" method="POST">
-        {{ forms.render_field("Имя", "forename", entered_form, error_fields, "text", "min='1' max='64' placeholder='Иван' required") }}
+        {{ forms.render_field("Имя", "forename", entered_form, error_fields, "text", "min='1' max='64' placeholder='Иван' required autofocus") }}
         {{ forms.render_field("Фамилия", "surname", entered_form, error_fields, "text", "min='1' max='64' placeholder='Иванов' required") }}
         {{ forms.render_field("E-mail", "email", entered_form, error_fields, "email", "placeholder='ivan.ivanov@example.com'") }}
         {{ forms.render_checkbox_field("Пол", "gender", entered_form, error_fields,

@@ -5,7 +5,7 @@ namespace Nwoc;
  * Represents validation methods for a Student class.
  */
 class StudentValidator {
-    const NAME_REGEXP = "/^[А-Яа-я' ]+$/u";
+    const NAME_REGEXP = "/^[А-Яа-я' -]+$/u";
     const GROUP_REGEXP = "/^[А-Яа-я0-9]+$/u";
     const EMAIL_REGEXP = "/@/";
 
