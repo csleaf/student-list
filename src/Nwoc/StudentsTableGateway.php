@@ -7,6 +7,7 @@ namespace Nwoc;
 class StudentsTableGateway {
     const NAME_REGEXP = "/^[А-Яа-я' ]+$/u";
     const GROUP_REGEXP = "/^[А-Яа-я0-9]+$/u";
+    const EMAIL_REGEXP = "/@/";
     const ORDER_ASC = 0;
     const ORDER_DESC = 1;
 
@@ -40,10 +41,10 @@ class StudentsTableGateway {
                   ->validate($student->surname, $errors, 'surname');
 
         // email
-        // @TODO: regexp match
         $validator->clear();
         $validator->min_length(1, 'Вы не задали свой e-mail.')
-                  ->max_length(64, 'Вы ввели слишком длинный e-mail, максимальное кол-во символов: :inparam, вы ввели: :outparam символов.');
+                  ->max_length(64, 'Вы ввели слишком длинный e-mail, максимальное кол-во символов: :inparam, вы ввели: :outparam символов.')
+                  ->regexp_match(self::EMAIL_REGEXP, 'В e-mail должен присутствовать символ \'@\'.');
 
         if ($validator->validate($student->email, $errors, 'email') === 0 && $check_email_registration) {
             // @TODO optimize query
