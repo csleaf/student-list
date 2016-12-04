@@ -66,9 +66,9 @@ class ProfileController {
                 try {
                     $student = $this->create_student($_POST);
                     $cookie = $gateway->register_student($student, $cookie);
+                    $origin = SiteUtil::get_server_origin_url($_SERVER);
                     setcookie('session', $cookie, time() + 60*60*24*365*10);
-                    // @TODO change domain
-                    header('Location: http://localhost/index.php?notify=registered', true, 303);
+                    header("Location: $origin/index.php?notify=registered", true, 303);
                     return;
                 } catch (ValidationException $e) {
                     $env['entered_form'] = $student;
