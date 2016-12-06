@@ -7,7 +7,7 @@ class SecurityUtil {
     /**
     * Generates string of specified size with random characters [A-Za-z0-9] inside it.
     */
-    public static function generate_session_id(int $size = 32) {
+    public static function generate_token(int $size = 32) {
         $len = strlen(self::GENERATE_ALLOWED_CHARS);
         $out = str_repeat('x', $size);
         for ($i = 0; $i < $size; ++$i) {

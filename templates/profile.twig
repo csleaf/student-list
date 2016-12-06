@@ -9,24 +9,18 @@
 {% endif %}
 
 {% if error_fields %}
-    {% if error_fields["system"] %}
-        {% for error in error_fields["system"] %}
-            {% for error in field_errors %}
-                <div class="error-box">
-                    Произошла непредвиденная ошибка. Попробуйте отправить форму позже.
-                </div>
-            {% endfor %}
-        {% endfor %}
-    {% else %}
-        <div class="error-box">
-            В форме найдены ошибки. Пожалуйста, исправьте их и отправьте форму заново.
-        </div>
-    {% endif %}
+    <div class="error-box">
+        В форме найдены ошибки. Пожалуйста, исправьте их и отправьте форму заново.
+    </div>
 {% endif %}
 
 {% if notify == 'edit_successful' %}
 <div class="info-box">
     Данные отредактированы и сохранены.
+</div>
+{% elseif notify == 'xsrf_check_failed' %}
+<div class='error-box'>
+    Вы отправляли форму слишком долго. Попробуйте ещё раз.
 </div>
 {% endif %}
 
@@ -46,6 +40,7 @@
             "Да", "1", "required",
             "Нет", "0", "required"
         ) }}
+        <input type='hidden' name='token' value='{{ token }}'>
         <input type='hidden' name='action' value='{% if is_logged_in %}edit{% else %}register{% endif %}'>
         <input type='submit' value='{% if is_logged_in %}Сохранить{% else %}Зарегистрироваться{% endif %}'>
     </form>

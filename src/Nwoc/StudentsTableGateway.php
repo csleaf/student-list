@@ -18,7 +18,7 @@ class StudentsTableGateway {
     * Registers student in database and returns it's cookie in &$cookie variable.
     */
     public function register_student(Student $student): string {
-        $cookie = SecurityUtil::generate_session_id();
+        $cookie = SecurityUtil::generate_token();
 
         $stmt = $this->db->prepare('INSERT INTO students(forename, surname, email, group_id, exam_results, birth_year, is_foreign, gender, cookie) VALUES (?,?,?,?,?,?,?,?,?)');
         $stmt->execute(array(strval($student->forename),
