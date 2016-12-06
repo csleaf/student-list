@@ -37,7 +37,6 @@
     <span>Поиск: </span>
     <form class='inline-form' action='/index.php' type='GET'>
         <input name='query' type='search' class='placeholder-input' placeholder='Введите запрос...' {% if search_query %}value='{{ search_query }}'{% endif %} />
-        <!-- @TODO: XSRF -->
         {{ me.put_get_params_as_hidden_inputs(get_params, ['sort', 'order']) }}
         <input type='submit' value='Найти' />
     </form>

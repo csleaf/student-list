@@ -100,11 +100,16 @@ class StudentsTableGateway {
     * ascending or descending order, with page and entries limit.
     */
     public function get_all_students(string $order_field = 'forename', int $order_dir = self::ORDER_ASC, int $page = 0, int $limit = 50): array {
-        // @TODO CRITICAL: fix SQL injection
-        $query = $this->db->query('SELECT forename, surname, group_id, exam_results
-            FROM students
-            ORDER BY ' . $order_field . ' ' . ($order_dir == self::ORDER_ASC ? 'ASC' : 'DESC') . ' ' .
-            'LIMIT ' . ($page * $limit) . ', ' . $limit);
+        $order_field = htmlentities($order_field);
+        $order_dir = $order_dir == self::ORDER_ASC ? 'ASC' : 'DESC';
+        $query_string = "SELECT forename, surname, group_id, exam_results
+                         FROM students
+                         ORDER BY $order_field $order_dir
+                         LIMIT :limit_start, :limit_end";
+        $query = $this->db->prepare($query_string);
+        $query->bindValue(':limit_start', $page * $limit, \PDO::PARAM_INT);
+        $query->bindValue(':limit_end', $limit, \PDO::PARAM_INT);
+        $query->execute();
 
         $students = array();
         while (($row = $query->fetch(\PDO::FETCH_NUM))) {
@@ -131,17 +136,18 @@ class StudentsTableGateway {
     * Searches all students by keyword, ordered by field and has page and limit.
     */
     public function find_students(string $keyword, string $order_by = 'forename', $order_dir = self::ORDER_ASC, $page = 0, $limit = 50) {
-        // @TODO CRITICAL: fix SQL injection
-        $s = 'SELECT forename, surname, group_id, exam_results
-            FROM students
-            WHERE CONCAT(forename, \' \', surname, \' \', group_id, \' \', exam_results)
-            LIKE :keyword
-            ORDER BY ' . $order_by . ' ' . ($order_dir == self::ORDER_ASC ? 'ASC' : 'DESC') . ' ' .
-            'LIMIT ' . ($page * $limit) . ', ' . $limit;
-        $query = $this->db->prepare($s);
-
-        $keyword = '%'.$keyword.'%';
-        $query->bindParam(':keyword', $keyword, \PDO::PARAM_STR);
+        $order_by = htmlentities($order_by);
+        $order_dir = $order_dir == self::ORDER_ASC ? 'ASC' : 'DESC';
+        $query_string = "SELECT forename, surname, group_id, exam_results
+                         FROM students
+                         WHERE CONCAT(forename, ' ', surname, ' ', group_id, ' ', exam_results)
+                         LIKE :keyword
+                         ORDER BY $order_by $order_dir
+                         LIMIT :limit_start, :limit_end";
+        $query = $this->db->prepare($query_string);
+        $query->bindValue(':keyword', "%{$keyword}%", \PDO::PARAM_STR);
+        $query->bindValue(':limit_start', $page * $limit, \PDO::PARAM_INT);
+        $query->bindValue(':limit_end', $limit, \PDO::PARAM_INT);
         $query->execute();
 
         $students = array();
