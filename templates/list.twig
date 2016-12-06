@@ -43,7 +43,11 @@
 </div>
 
 {% if search_query %}
-    <p>Показаны только абитуриенты, найденные по запросу «{{ search_query }}».</p>
+    {% if total_students > 0 %}
+        <p>Найдено {{ total_students }} абитуриентов по запросу «{{ search_query }}».</p>
+    {% else %}
+        <p>По запросу «{{ search_query }}» не было найдено ни одного абитуриента.</p>
+    {% endif %}
     <p>[<a href='/index.php'>Показать всех абитуриентов</a>]</p>
 {% endif %}
 
@@ -64,12 +68,15 @@
 
 <div class="page-selector">
     <span>Страницы: </span>
-    {% for page in range(1, max_pages + 1) %}
+    {% if curr_page >= max_pages %}
+        {% set curr_page = max_pages %}
+    {% endif %}
+    {% for page in range(0, max_pages) %}
         {% set isCurrPage = page == curr_page %}
-        {% set vals = { "page": (page == 1 ? NULL : page) } %}
+        {% set vals = { "page": page + 1 } %}
 
         {# TODO genuri #}
-        <a {% if not isCurrPage %}href="{{ urigen("index.php", vals, restrict_params) }}"{% endif %} class="page-selector-item {% if isCurrPage %}page-selector-item-active{% endif %}">{{ page }}</a>
+        <a {% if not isCurrPage %}href="{{ urigen("index.php", vals, restrict_params) }}"{% endif %} class="page-selector-item {% if isCurrPage %}page-selector-item-active{% endif %}">{{ page + 1 }}</a>
     {% endfor %}
 </div>
 {% endblock %}

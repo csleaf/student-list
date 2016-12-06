@@ -40,27 +40,38 @@ class ListController {
             $order = 'asc';
         }
 
-        if (isset($_GET['query'])) {
+        $students_found = 0;
+
+        if (isset($_GET['query']) && !empty($_GET['query'])) {
             $search_query = strval($_GET['query']);
             $students = $gateway->find_students(
                 $search_query,
                 $sort_by,
-                $order == 'asc' ? StudentsTableGateway::ORDER_ASC : StudentsTableGateway::ORDER_DESC);
+                $order == 'asc' ? StudentsTableGateway::ORDER_ASC : StudentsTableGateway::ORDER_DESC,
+                $page,
+                50,
+                $students_found);
         } else {
             $students = $gateway->get_all_students(
                 $sort_by,
                 // @TODO this is ugly
                 $order == 'asc' ? StudentsTableGateway::ORDER_ASC : StudentsTableGateway::ORDER_DESC,
-                $page);
+                $page,
+                50);
             $search_query = NULL;
+        }
+
+        if (!isset($search_query)) {
+            $students_found = $gateway->count_students();
         }
 
         return $this->template_engine->render('list.twig', array(
             'title' => 'Список абитуриентов',
             'sort_by' => $sort_by,
             'students' => $students,
-            'curr_page' => $page + 1,
-            'max_pages' => intval($gateway->count_students() / 50),
+            'curr_page' => $page,
+            'max_pages' => abs(intval(($students_found - 1) / 50)),
+            'total_students' => $students_found,
             'order' => $order,
             'search_query' => $search_query,
             'get_params' => $_GET,

@@ -134,16 +134,25 @@ class StudentsTableGateway {
 
     /**
     * Searches all students by keyword, ordered by field and has page and limit.
+    * Optional $total_students_count reference can be set to rethieve number of found students.
     */
-    public function find_students(string $keyword, string $order_by = 'forename', $order_dir = self::ORDER_ASC, $page = 0, $limit = 50) {
+    public function find_students(
+        string $keyword,
+        string $order_by = 'forename',
+        $order_dir = self::ORDER_ASC,
+        $page = 0,
+        $limit = 50,
+        &$total_students_count = null
+    ) {
         $order_by = htmlentities($order_by);
         $order_dir = $order_dir == self::ORDER_ASC ? 'ASC' : 'DESC';
-        $query_string = "SELECT forename, surname, group_id, exam_results
-                         FROM students
-                         WHERE CONCAT(forename, ' ', surname, ' ', group_id, ' ', exam_results)
-                         LIKE :keyword
-                         ORDER BY $order_by $order_dir
-                         LIMIT :limit_start, :limit_end";
+        $query_string = 
+            "SELECT forename, surname, group_id, exam_results
+             FROM students
+             WHERE CONCAT(forename, ' ', surname, ' ', group_id, ' ', exam_results)
+             LIKE :keyword
+             ORDER BY $order_by $order_dir
+             LIMIT :limit_start, :limit_end";
         $query = $this->db->prepare($query_string);
         $query->bindValue(':keyword', "%{$keyword}%", \PDO::PARAM_STR);
         $query->bindValue(':limit_start', $page * $limit, \PDO::PARAM_INT);
@@ -161,6 +170,28 @@ class StudentsTableGateway {
         }
 
         $query->closeCursor();
+
+        if (isset($total_students_count)) {
+            if ($page == 0 && count($students) < $limit) {
+                $total_students_count = count($students);
+            } else {
+                echo "branch";
+                $query_string = 
+                    "SELECT COUNT(*)
+                     FROM students
+                     WHERE CONCAT(forename, ' ', surname, ' ', group_id, ' ', exam_results)
+                     LIKE :keyword
+                     ORDER BY $order_by $order_dir";
+                $query = $this->db->prepare($query_string);
+                $query->bindValue(':keyword', "%{$keyword}%", \PDO::PARAM_STR);
+                $query->execute();
+
+                $total_students_count = intval($query->fetch(\PDO::FETCH_NUM)[0]);
+
+                $query->closeCursor();
+            }
+        }
+
         return $students;
     }
 }
