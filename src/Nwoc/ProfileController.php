@@ -62,7 +62,7 @@ class ProfileController {
         $token = NULL;
         if (!isset($_COOKIE['token'])) {
             $token = SecurityUtil::generate_token();
-            setcookie('token', SecurityUtil::generate_token(), time() + 60*60*4, "", "", false, true);
+            setcookie('token', $token, time() + 60*60*4, "", "", false, true);
         } else {
             $token = strval($_COOKIE['token']);
             setcookie('token', $token, time() + 60*60*4, "", "", false, true);
@@ -71,8 +71,6 @@ class ProfileController {
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
             $post_token = isset($_POST['token']) ? $_POST['token'] : NULL;
-            echo "token = $token";
-            echo "post token = $post_token";
             if (!isset($post_token) || $post_token != $token) {
                 $form = $this->create_student($_POST);
                 $env['notify'] = 'xsrf_check_failed';
@@ -93,7 +91,6 @@ class ProfileController {
                     }
                 }
                 else if ($action == 'edit' && isset($student)) {
-                    // @TODO
                     try {
                         $student = $this->create_student($_POST);
                         StudentValidator::validate($student, $gateway, false);

@@ -75,7 +75,6 @@
         {% set isCurrPage = page == curr_page %}
         {% set vals = { "page": page + 1 } %}
 
-        {# TODO genuri #}
         <a {% if not isCurrPage %}href="{{ urigen("index.php", vals, restrict_params) }}"{% endif %} class="page-selector-item {% if isCurrPage %}page-selector-item-active{% endif %}">{{ page + 1 }}</a>
     {% endfor %}
 </div>

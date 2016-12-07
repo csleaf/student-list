@@ -35,9 +35,9 @@ class ListController {
         }
 
         if (isset($_GET['order']) && ($_GET['order'] === 'asc' || $_GET['order'] === 'desc')) {
-            $order = strtolower(strval($_GET['order']));
+            $order = $_GET['order'] === 'asc' ? StudentsTableGateway::ORDER_ASC : StudentsTableGateway::ORDER_DESC;
         } else {
-            $order = 'asc';
+            $order = StudentsTableGateway::ORDER_ASC;
         }
 
         $students_found = 0;
@@ -47,15 +47,14 @@ class ListController {
             $students = $gateway->find_students(
                 $search_query,
                 $sort_by,
-                $order == 'asc' ? StudentsTableGateway::ORDER_ASC : StudentsTableGateway::ORDER_DESC,
+                $order,
                 $page,
                 50,
                 $students_found);
         } else {
             $students = $gateway->get_all_students(
                 $sort_by,
-                // @TODO this is ugly
-                $order == 'asc' ? StudentsTableGateway::ORDER_ASC : StudentsTableGateway::ORDER_DESC,
+                $order,
                 $page,
                 50);
             $search_query = NULL;

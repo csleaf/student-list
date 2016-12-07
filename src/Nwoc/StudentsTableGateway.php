@@ -175,7 +175,6 @@ class StudentsTableGateway {
             if ($page == 0 && count($students) < $limit) {
                 $total_students_count = count($students);
             } else {
-                echo "branch";
                 $query_string = 
                     "SELECT COUNT(*)
                      FROM students

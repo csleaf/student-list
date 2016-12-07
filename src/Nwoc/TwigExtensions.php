@@ -22,7 +22,11 @@ class TwigExtensions {
         } else {
             $get = $_GET;
         }
-        // @TODO
-        return $uri_base . '?' . \http_build_query(array_merge($get, $query_data));
+        $query_array = array_merge($get, $query_data);
+        if (count($query_array == 0)) {
+            return $uri_base;
+        } else {
+            return $uri_base . '?' . \http_build_query($query_array);
+        }
     }
 }

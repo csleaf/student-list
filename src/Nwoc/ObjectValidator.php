@@ -61,7 +61,7 @@ class ObjectValidator {
             if (!isset($object)) {
                 ++$num_errors;
                 array_push($seterrors, $this->get_error_msg(self::NOT_NULL_MSG, 'Object is null.'));
-                // @TODO should return because there is no point in other checks.
+                return $num_errors;
             }
         }
 
